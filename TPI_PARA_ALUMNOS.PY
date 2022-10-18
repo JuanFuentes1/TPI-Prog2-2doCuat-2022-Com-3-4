@@ -1,3 +1,4 @@
+from re import T
 import sqlite3
 
 class ProgramaPrincipal:
@@ -5,8 +6,9 @@ class ProgramaPrincipal:
     def menu(self):
         while True:
             print("Menu de opciones Concesionaria")
-            print("2- Modificar Automovil")
             print("1- Cargar Automovil")
+            print("2- Modificar Automovil")
+            print("3- Eliminar Automovil")
             print("0- Salir de menu")
             nro = int(input("Por favor ingrese un número"))
             if nro == 1:
@@ -22,6 +24,11 @@ class ProgramaPrincipal:
                 precio = input("Por favor ingrese el nuevo precio: ")
                 automovil_a_modificar=Automovil(marca,modelo,precio)
                 automovil_a_modificar.modificar_automoviles()
+            if nro==3:
+                marca = input("Por favor ingrese el nombre de la marca del automovil a eliminar: ")
+                modelo = input("Por favor ingrese el nombre del modelo ha eliminar: ")
+                automovil_a_eliminar=Automovil(marca,modelo)
+                automovil_a_eliminar.eliminar_automovil
             if nro==0:
                 break
     
@@ -63,9 +70,20 @@ class Automovil:
         except:
             print('Error al actualizar un automovil')
         finally:
-            conexion.cerrarConexion()  
-        
-    
+            conexion.cerrarConexion()
+
+    def eliminar_automovil(self):
+        conexion = Conexiones()
+        conexion.abrirConexion()
+        try:
+            conexion.miCursor.execute("DELETE FROM AUTOMOVILES where marca='{}' and modelo='{}'".format(self.marca,self.modelo))
+            conexion.miConexion.commit()
+            print("El automovil se ha eliminado correctamente")
+        except:
+            print("Ha ocurrido un error al eliminar el automovil")
+        finally:
+            conexion.cerrarConexion()
+
 class Conexiones:
     
     def abrirConexion(self):
