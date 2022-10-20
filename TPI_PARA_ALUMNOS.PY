@@ -4,11 +4,13 @@ class ProgramaPrincipal:
 
     def menu(self):
         while True:
-            print("Menu de opciones Concesionaria")
-            print("2- Modificar Automovil")
+            print("\n---Menu de opciones Concesionaria---\n")
             print("1- Cargar Automovil")
-            print("0- Salir de menu")
-            nro = int(input("Por favor ingrese un número"))
+            print("2- Modificar Automovil")
+            print("3- Eliminar Automovil")
+            print("5- Mostrar Automoviles")
+            print("0- Salir de menu\n")
+            nro = int(input("Por favor ingrese un número (1 al 5): "))
             if nro == 1:
                 marca = input("Por favor ingrese la marca del automovil: ")
                 modelo = input("Por favor ingrese el modelo del automovil: ")
@@ -22,6 +24,13 @@ class ProgramaPrincipal:
                 precio = input("Por favor ingrese el nuevo precio: ")
                 automovil_a_modificar=Automovil(marca,modelo,precio)
                 automovil_a_modificar.modificar_automoviles()
+            if nro==3:
+                marca = input("Por favor ingrese el nombre de la marca del automovil a eliminar: ")
+                modelo = input("Por favor ingrese el nombre del modelo ha eliminar: ")
+                automovil_a_eliminar=Automovil(marca,modelo)
+                automovil_a_eliminar.eliminar_automovil
+            if nro == 5:
+                Automovil.mostrar_automoviles()
             if nro==0:
                 break
     
@@ -63,7 +72,35 @@ class Automovil:
         except:
             print('Error al actualizar un automovil')
         finally:
-            conexion.cerrarConexion()  
+            conexion.cerrarConexion() 
+
+    def eliminar_automovil(self):
+        conexion = Conexiones()
+        conexion.abrirConexion()
+        try:
+            conexion.miCursor.execute("DELETE FROM AUTOMOVILES where marca='{}' and modelo='{}'".format(self.marca,self.modelo))
+            conexion.miConexion.commit()
+            print("El automovil se ha eliminado correctamente")
+        except:
+            print("Ha ocurrido un error al eliminar el automovil")
+        finally:
+            conexion.cerrarConexion()
+
+    @classmethod
+    def mostrar_automoviles(cls):
+        conexion = Conexiones()
+        conexion.abrirConexion()
+        try:
+            conexion.miCursor.execute("SELECT * FROM AUTOMOVILES")
+            autos=conexion.miCursor.fetchall()
+            print("\nA continuacion se muestra:\n")
+            print("ID - MARCA - MODELO - PRECIO - STOCK")
+            for i in autos:
+                print(i)
+        except:
+            print("No hay ningun registro")
+        finally:
+            conexion.cerrarConexion()
         
     
 class Conexiones:
