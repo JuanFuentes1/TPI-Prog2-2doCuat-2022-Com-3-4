@@ -19,6 +19,8 @@ class ProgramaPrincipal:
             print("8- Eliminar Motos")
             print("9- Cargar disponibilidad Motos")
             print("10- Mostrar Motos")
+            print("11- Mostrar registro historico Motos")
+            print("12- Registro por fechas, no funcional.")
             print("0- Salir de menu")
             nro = int(input("\nPor favor ingrese una opción: "))
             if nro == 1:
@@ -77,10 +79,13 @@ class ProgramaPrincipal:
             if nro == 7:
                 clearConsole()
                 print("--Modificar Motos--")
+                print("Actualizando registros historicos.")
+                Moto.registrar_historicos(self)
                 marca = input("Por favor ingrese el nombre de la marca: ")
                 modelo = input("Por favor ingrese el nombre del modelo: ")
                 precio = input("Por favor ingrese el nuevo precio: ")
-                moto_a_modificar=Moto(marca,modelo,precio)
+                fecha = input("Por favor ingrese la fecha de la modificacion: ")
+                moto_a_modificar=Moto(marca,modelo,precio,fecha)
                 moto_a_modificar.modificar_motos()
                 os.system("Pause")
             if nro == 8:
@@ -104,6 +109,15 @@ class ProgramaPrincipal:
                 print("--Mostrar Motos--")
                 Moto.mostrar_motos()
                 os.system("Pause")
+            if nro == 11:
+                print("--Mostrar Registro Historico Motos--")
+                Moto.mostrar_motos_historico()
+                os.system("Pause")
+            if nro == 12:
+                print("Registro por fechas")
+                Moto(fecha)
+                fecha = input('Ingrese la fecha')
+                fecha.mostrar_motos_fecha()
             if nro == 0:
                 break
     
@@ -122,6 +136,14 @@ class ProgramaPrincipal:
         conexion.miCursor.execute("CREATE TABLE Moto (id_moto INTEGER PRIMARY KEY, marca VARCHAR(30), modelo VARCHAR(30), precio INTEGER, color VARCHAR(30), cilindrada VARCHAR(30), cantidadDisponibles INTEGER, fecha DATETIME)")    
         conexion.miConexion.commit()       
         conexion.cerrarConexion()
+    
+    def crearTablas3(self):
+        conexion = Conexiones()
+        conexion.abrirConexion()
+        conexion.miCursor.execute("DROP TABLE IF EXISTS historico_motocicletas")
+        conexion.miCursor.execute("CREATE TABLE historico_motocicletas (id_moto INTEGER PRIMARY KEY, marca VARCHAR(30), modelo VARCHAR(30), precio INTEGER, color VARCHAR(30), cilindrada VARCHAR(30), cantidadDisponibles INTEGER, fecha DATETIME)")    
+        conexion.miConexion.commit()       
+        conexion.cerrarConexion()
 
 def clearConsole():
     command = 'clear'
@@ -135,4 +157,5 @@ clearConsole()
 programa = ProgramaPrincipal()
 programa.crearTablas()
 programa.crearTablas2()
+programa.crearTablas3()
 programa.menu()

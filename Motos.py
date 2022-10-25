@@ -1,7 +1,7 @@
 from conexiones import Conexiones
 
 class Moto:
-    def __init__(self, marca, modelo, precio, color, cilindrada, cantidadDisponibles, fecha):
+    def __init__(self, marca, modelo, precio=None, color=None, cilindrada=None, cantidadDisponibles=None, fecha=None):
         self.marca = marca
         self.modelo = modelo
         self.precio = precio
@@ -27,7 +27,9 @@ class Moto:
         conexion = Conexiones()
         conexion.abrirConexion()
         try:
-            conexion.miCursor.execute("UPDATE Moto SET precio='{}' where marca='{}' and modelo='{}'".format(self.precio,self.marca,self.modelo))
+            conexion.miCursor.execute("UPDATE Moto \
+                SET precio='{}', fecha='{}' \
+                where marca='{}' and modelo='{}' ".format(self.precio,self.fecha,self.marca,self.modelo))
             conexion.miConexion.commit()
             print("\nMoto modificada correctamente\n")
         except:
@@ -72,5 +74,51 @@ class Moto:
                 print(i)
         except:
             print("No hay ningun registro")
+        finally:
+            conexion.cerrarConexion()
+
+    @classmethod
+    def mostrar_motos_historico(cls):
+            conexion = Conexiones()
+            conexion.abrirConexion()
+            try:
+                conexion.miCursor.execute("SELECT * FROM historico_motocicletas")
+                motos=conexion.miCursor.fetchall()
+                print("\nRegistro Historico:\n")
+                print("ID - MARCA - MODELO - PRECIO - COLOR - CILINDRADA - STOCK - FECHA")
+                for i in motos:
+                    print(i)
+            except:
+                print("No hay ningun registro historico")
+            finally:
+                conexion.cerrarConexion()
+
+    @classmethod
+    def mostrar_motos_fecha(cls):
+            conexion = Conexiones()
+            conexion.abrirConexion()
+            try:
+                conexion.miCursor.execute("SELECT * FROM Moto \
+                    WHERE DATE(fecha) <= DATE fecha ='{}' ")
+                motos=conexion.miCursor.fetchall()
+                print("\nRegistro anterior:\n")
+                print("ID - MARCA - MODELO - PRECIO - COLOR - CILINDRADA - STOCK - FECHA")
+                for i in motos:
+                    print(i)
+            except:
+                print("No hay ningun registro historico")
+            finally:
+                conexion.cerrarConexion()
+
+    def registrar_historicos(self):
+        conexion = Conexiones()
+        conexion.abrirConexion()
+        try:
+            conexion.miCursor.execute("INSERT INTO historico_motocicletas (marca,modelo,precio,color,cilindrada,cantidadDisponibles,fecha) \
+             SELECT marca,modelo,precio,color,cilindrada,cantidadDisponibles,fecha \
+             FROM Moto")
+            conexion.miConexion.commit()
+        except:
+            print('Error al registrar historicos')
         finally:
             conexion.cerrarConexion()
