@@ -85,7 +85,7 @@ class ProgramaPrincipal:
                 modelo = input("Por favor ingrese el nombre del modelo: ")
                 precio = input("Por favor ingrese el nuevo precio: ")
                 fecha = input("Por favor ingrese la fecha de la modificacion: ")
-                moto_a_modificar=Moto(marca,modelo,precio,fecha)
+                moto_a_modificar = Moto(marca,modelo,precio,color,cilindrada,cantidadDisponibles,fecha)
                 moto_a_modificar.modificar_motos()
                 os.system("Pause")
             if nro == 8:
@@ -110,10 +110,12 @@ class ProgramaPrincipal:
                 Moto.mostrar_motos()
                 os.system("Pause")
             if nro == 11:
+                clearConsole()
                 print("--Mostrar Registro Historico Motos--")
                 Moto.mostrar_motos_historico()
                 os.system("Pause")
             if nro == 12:
+                clearConsole()
                 print("Registro por fechas")
                 Moto(fecha)
                 fecha = input('Ingrese la fecha')
