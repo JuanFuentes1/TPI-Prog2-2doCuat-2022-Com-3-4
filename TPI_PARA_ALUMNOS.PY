@@ -1,5 +1,7 @@
-import sqlite3
 import os
+from Auto import Automovil
+from Motos import Moto
+from conexiones import Conexiones
 
 class ProgramaPrincipal:
 
@@ -10,8 +12,13 @@ class ProgramaPrincipal:
             print("1- Cargar Automoviles")
             print("2- Modificar Automoviles")
             print("3- Eliminar Automoviles")
+            print("4- Cargar disponibilidad Autos")
             print("5- Mostrar Automoviles")
             print("6- Cargar Motos")
+            print("7- Modificar Motos")
+            print("8- Eliminar Motos")
+            print("9- Cargar disponibilidad Motos")
+            print("10- Mostrar Motos")
             print("0- Salir de menu")
             nro = int(input("\nPor favor ingrese una opción: "))
             if nro == 1:
@@ -23,6 +30,7 @@ class ProgramaPrincipal:
                 cantidadDisponibles = input("Por favor ingrese la cantidad de unidades disponibles: ")
                 nuevo_automovil = Automovil(marca,modelo,precio,cantidadDisponibles)
                 nuevo_automovil.cargar_automovil()
+                os.system("Pause")
             if nro == 2:
                 clearConsole()
                 print("--Modificar Automoviles--")
@@ -31,6 +39,7 @@ class ProgramaPrincipal:
                 precio = input("Por favor ingrese el nuevo precio: ")
                 automovil_a_modificar=Automovil(marca,modelo,precio)
                 automovil_a_modificar.modificar_automoviles()
+                os.system("Pause")
             if nro == 3:
                 clearConsole()
                 print("--Eliminar Automovil--")
@@ -38,6 +47,15 @@ class ProgramaPrincipal:
                 modelo = input("Por favor ingrese el nombre del modelo ha eliminar: ")
                 automovil_a_eliminar=Automovil(marca,modelo)
                 automovil_a_eliminar.eliminar_automovil()
+                os.system("Pause")
+            if nro==4:
+                clearConsole()            
+                print("--Cargar Disponibilidad Autos--")
+                marca = input("Por favor ingrese la marca del automovil: ")
+                modelo = input("Por favor ingrese el modelo del automovil: ")
+                automovil_disponibles=Automovil(marca,modelo)
+                automovil_disponibles.cargar_disponibilidad()
+                os.system("Pause")
             if nro == 5:
                 clearConsole()
                 print("--Mostrar Automoviles--")
@@ -51,9 +69,41 @@ class ProgramaPrincipal:
                 precio = input("Por favor ingrese el precio de la moto: ")
                 color = input("Por favor ingrese el color: ")
                 cilindrada = input("Por favor ingrese la cilindrada: ")
+                cantidadDisponibles = input("Por favor ingrese el stock: ")
                 fecha = input("Por favor ingrese la fecha del ultimo precio: ")
-                nuevo_automovil = Moto(marca,modelo,precio,color,cilindrada,fecha)
-                nuevo_automovil.cargar_moto()
+                nueva_moto = Moto(marca,modelo,precio,color,cilindrada,cantidadDisponibles,fecha)
+                nueva_moto.cargar_moto()
+                os.system("Pause")
+            if nro == 7:
+                clearConsole()
+                print("--Modificar Motos--")
+                marca = input("Por favor ingrese el nombre de la marca: ")
+                modelo = input("Por favor ingrese el nombre del modelo: ")
+                precio = input("Por favor ingrese el nuevo precio: ")
+                moto_a_modificar=Moto(marca,modelo,precio)
+                moto_a_modificar.modificar_motos()
+                os.system("Pause")
+            if nro == 8:
+                clearConsole()
+                print("--Eliminar Motos--")
+                marca = input("Por favor ingrese el nombre de la marca del automovil a eliminar: ")
+                modelo = input("Por favor ingrese el nombre del modelo ha eliminar: ")
+                moto_a_eliminar=Moto(marca,modelo)
+                moto_a_eliminar.eliminar_motos()
+                os.system("Pause")
+            if nro==9:
+                clearConsole()            
+                print("--Cargar disponibilidad Motos--")
+                marca = input("Por favor ingrese la marca de la moto: ")
+                modelo = input("Por favor ingrese el modelo de la moto: ")
+                motos_disponibles=Moto(marca,modelo,precio,color,cilindrada,cantidadDisponibles,fecha)
+                motos_disponibles.cargar_disponibilidad()
+                os.system("Pause")
+            if nro == 10:
+                clearConsole()
+                print("--Mostrar Motos--")
+                Moto.mostrar_motos()
+                os.system("Pause")
             if nro == 0:
                 break
     
@@ -69,7 +119,7 @@ class ProgramaPrincipal:
         conexion = Conexiones()
         conexion.abrirConexion()
         conexion.miCursor.execute("DROP TABLE IF EXISTS Moto")
-        conexion.miCursor.execute("CREATE TABLE Moto (id_moto INTEGER PRIMARY KEY, marca VARCHAR(30), modelo VARCHAR(30), precio INTEGER, color VARCHAR(30), cilindrada VARCHAR(30), fecha DATETIME)")    
+        conexion.miCursor.execute("CREATE TABLE Moto (id_moto INTEGER PRIMARY KEY, marca VARCHAR(30), modelo VARCHAR(30), precio INTEGER, color VARCHAR(30), cilindrada VARCHAR(30), cantidadDisponibles INTEGER, fecha DATETIME)")    
         conexion.miConexion.commit()       
         conexion.cerrarConexion()
 
@@ -81,101 +131,7 @@ def clearConsole():
 
 clearConsole()
 
-class Automovil:
-    def __init__(self, marca, modelo,precio=None,cantidadDisponibles=None):
-        self.marca = marca
-        self.modelo = modelo
-        self.precio=precio
-        self.cantidadDisponibles=cantidadDisponibles
-        
-    def cargar_automovil(self):
-        conexion = Conexiones()
-        conexion.abrirConexion()
-        try:
-            conexion.miCursor.execute("INSERT INTO AUTOMOVILES(marca,modelo,precio,cantidadDisponibles) VALUES('{}', '{}','{}','{}')".format(self.marca, self.modelo,self.precio,self.cantidadDisponibles))
-            conexion.miConexion.commit()
-            print("Automovil cargado exitosamente")
-        except:
-            print("Error al agregar un automovil")
-        finally:
-            conexion.cerrarConexion()
-    
-    
-    def modificar_automoviles(self):
-        conexion = Conexiones()
-        conexion.abrirConexion()
-        try:
-            conexion.miCursor.execute("UPDATE AUTOMOVILES SET precio='{}' where marca='{}' and modelo='{}'".format(self.precio,self.marca,self.modelo))
-            conexion.miConexion.commit()
-            print("Automovil modificado correctamente")
-        except:
-            print('Error al actualizar un automovil')
-        finally:
-            conexion.cerrarConexion()  
-    
-    def eliminar_automovil(self):
-        conexion = Conexiones()
-        conexion.abrirConexion()
-        try:
-            conexion.miCursor.execute("DELETE FROM AUTOMOVILES where marca='{}' and modelo='{}'".format(self.marca,self.modelo))
-            conexion.miConexion.commit()
-            print("El automovil se ha eliminado correctamente")
-        except:
-            print("Ha ocurrido un error al eliminar el automovil")
-        finally:
-            conexion.cerrarConexion()
-    
-    @classmethod
-    def mostrar_automoviles(cls):
-        conexion = Conexiones()
-        conexion.abrirConexion()
-        try:
-            conexion.miCursor.execute("SELECT * FROM AUTOMOVILES")
-            autos=conexion.miCursor.fetchall()
-            print("\nA continuacion se muestra:\n")
-            print("ID - MARCA - MODELO - PRECIO - STOCK")
-            for i in autos:
-                print(i)
-        except:
-            print("No hay ningun registro")
-        finally:
-            conexion.cerrarConexion()
-
-      
-class Conexiones:
-    
-    def abrirConexion(self):
-        self.miConexion = sqlite3.connect("Concesionaria")
-        self.miCursor = self.miConexion.cursor()
-        
-    def cerrarConexion(self):
-        self.miConexion.close()  
-        
-class Moto:
-    def __init__(self, marca, modelo, precio, color, cilindrada, fecha):
-        self.marca = marca
-        self.modelo = modelo
-        self.precio = precio
-        self.color = color
-        self.cilindrada = cilindrada
-        self.fecha = fecha
-        
-    def cargar_moto(self):
-            conexion = Conexiones()
-            conexion.abrirConexion()
          
-            try:
-             conexion.miCursor.execute("INSERT INTO Moto(marca,modelo,precio,color,cilindrada,fecha) VALUES('{}', '{}','{}','{}', '{}', '{}')".format(self.marca, self.modelo, self.precio, self.color, self.cilindrada, self.fecha))
-             conexion.miConexion.commit()
-             print("Moto cargada exitosamente")
-            except:
-             print("Error al agregar una moto")
-            finally:
-             conexion.cerrarConexion()
-          
-
-
-            
 programa = ProgramaPrincipal()
 programa.crearTablas()
 programa.crearTablas2()
