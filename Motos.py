@@ -1,7 +1,7 @@
 from conexiones import Conexiones
 
 class Moto:
-    def __init__(self, marca, modelo, precio=None, color=None, cilindrada=None, cantidadDisponibles=None, fecha=None):
+    def __init__(self, marca, modelo, precio, color, cilindrada, cantidadDisponibles, fecha):
         self.marca = marca
         self.modelo = modelo
         self.precio = precio
@@ -93,13 +93,11 @@ class Moto:
             finally:
                 conexion.cerrarConexion()
 
-    @classmethod
-    def mostrar_motos_fecha(cls):
+    def mostrar_motos_fecha(self):
             conexion = Conexiones()
             conexion.abrirConexion()
             try:
-                conexion.miCursor.execute("SELECT * FROM Moto \
-                    WHERE DATE(fecha) <= DATE fecha ='{}' ")
+                conexion.miCursor.execute("SELECT * FROM historico_motocicletas WHERE fecha <= '{}' ".format(self.fecha))
                 motos=conexion.miCursor.fetchall()
                 print("\nRegistro anterior:\n")
                 print("ID - MARCA - MODELO - PRECIO - COLOR - CILINDRADA - STOCK - FECHA")

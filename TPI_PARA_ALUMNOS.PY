@@ -20,7 +20,7 @@ class ProgramaPrincipal:
             print("9- Cargar disponibilidad Motos")
             print("10- Mostrar Motos")
             print("11- Mostrar registro historico Motos")
-            print("12- Registro por fechas, no funcional.")
+            print("12- Registro de modificaciones por fechas.")
             print("0- Salir de menu")
             nro = int(input("\nPor favor ingrese una opción: "))
             if nro == 1:
@@ -85,7 +85,7 @@ class ProgramaPrincipal:
                 modelo = input("Por favor ingrese el nombre del modelo: ")
                 precio = input("Por favor ingrese el nuevo precio: ")
                 fecha = input("Por favor ingrese la fecha de la modificacion: ")
-                moto_a_modificar=Moto(marca,modelo,precio,fecha)
+                moto_a_modificar=Moto(marca,modelo,precio,color,cilindrada,cantidadDisponibles,fecha)
                 moto_a_modificar.modificar_motos()
                 os.system("Pause")
             if nro == 8:
@@ -110,14 +110,17 @@ class ProgramaPrincipal:
                 Moto.mostrar_motos()
                 os.system("Pause")
             if nro == 11:
+                clearConsole()
                 print("--Mostrar Registro Historico Motos--")
                 Moto.mostrar_motos_historico()
                 os.system("Pause")
             if nro == 12:
-                print("Registro por fechas")
-                Moto(fecha)
-                fecha = input('Ingrese la fecha')
-                fecha.mostrar_motos_fecha()
+                clearConsole()
+                print("Registro por fechas\n")
+                fecha = input('Ingrese la fecha: ')
+                registro_fechas = Moto(marca,modelo,precio,color,cilindrada,cantidadDisponibles,fecha)
+                registro_fechas.mostrar_motos_fecha()
+                os.system("Pause")
             if nro == 0:
                 break
     
