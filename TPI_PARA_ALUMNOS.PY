@@ -20,7 +20,7 @@ class ProgramaPrincipal:
             print("9- Cargar disponibilidad Motos")
             print("10- Mostrar Motos")
             print("11- Mostrar registro historico Motos")
-            print("12- Registro de modificaciones por fechas.")
+            print("12- Registro de modificaciones por fechas HISTORICO.")
             print("0- Salir de menu")
             nro = int(input("\nPor favor ingrese una opción: "))
             if nro == 1:
@@ -117,7 +117,7 @@ class ProgramaPrincipal:
             if nro == 12:
                 clearConsole()
                 print("Registro por fechas\n")
-                fecha = input('Ingrese la fecha: ')
+                fecha = input('Ingrese la fecha maxima: ')
                 registro_fechas = Moto(marca,modelo,precio,color,cilindrada,cantidadDisponibles,fecha)
                 registro_fechas.mostrar_motos_fecha()
                 os.system("Pause")
